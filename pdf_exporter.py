@@ -31,7 +31,7 @@ class PDFExporter:
         img_w_mm = 63
         img_h_mm = 88
         crop_mm = 3.175
-        cutline_len_mm = 5    # Length of red trim lines at page edges
+        cutline_len_mm = 16    # Length of red trim lines at page edges
         corner_len_mm = 7     # Length of cyan corner marks on images
 
         # Convert sizes to pixels
@@ -71,7 +71,7 @@ class PDFExporter:
 
         def draw_corner_marks(x, y):
             pen = QPen(QColor(255, 0, 255))  # Magenta
-            pen.setWidth(3)                  # Thicker
+            pen.setWidth(4)                  # Thicker
             painter.setPen(pen)
 
             corner_len_mm = 1
@@ -111,17 +111,20 @@ class PDFExporter:
             if image.isNull():
                 continue
 
-            # Crop image by 3.175mm on all sides
-            crop_rect = QRect(
-                crop_px,
-                crop_px,
-                max(1, image.width() - 2 * crop_px),
-                max(1, image.height() - 2 * crop_px),
-            )
-            cropped_image = image.copy(crop_rect)
+            if card.is_cropped():
+                # Crop image by 3.175mm on all sides
+                crop_rect = QRect(
+                    crop_px,
+                    crop_px,
+                    max(1, image.width() - 2 * crop_px),
+                    max(1, image.height() - 2 * crop_px),
+                )
+                image_to_draw = image.copy(crop_rect)
+            else:
+                image_to_draw = image
 
             # Scale to exact card size
-            scaled_image = cropped_image.scaled(
+            scaled_image = image_to_draw.scaled(
                 img_w_px,
                 img_h_px,
                 Qt.IgnoreAspectRatio,
