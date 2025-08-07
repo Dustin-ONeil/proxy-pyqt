@@ -100,7 +100,7 @@ class MainWindow(QWidget):
             card.set_dark_mode(self.dark_mode_enabled)
 
     def export_pdf(self):
-        filename, _ = QFileDialog.getSaveFileName(self, "Save PDF", "", "PDF Files (*.pdf)")
+        filename, _ = QFileDialog.getSaveFileName(self, "Save PDF", "z_proxy_sheet", "PDF Files (*.pdf)")
         if not filename:
             return
         if not filename.lower().endswith(".pdf"):

@@ -30,7 +30,7 @@ class PDFExporter:
         # Sizes in millimeters
         img_w_mm = 63
         img_h_mm = 88
-        crop_mm = 3.175
+        crop_mm = 3.175*2
         cutline_len_mm = 16    # Length of red trim lines at page edges
         corner_len_mm = 7     # Length of cyan corner marks on images
 

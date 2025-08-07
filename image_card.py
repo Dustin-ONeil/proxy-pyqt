@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QFrame, QLabel, QVBoxLayout, QCheckBox, QHBoxLayout, QSpacerItem, QSizePolicy
 from PyQt5.QtGui import QPixmap, QFont, QImage
 from PyQt5.QtCore import Qt, QRect
+import re
 
 class ImageCard(QFrame):
     def __init__(self, image_path, title, parent=None):
@@ -31,7 +32,10 @@ class ImageCard(QFrame):
         self.checkbox.setChecked(True)
 
         self.cropped_checkbox = QCheckBox("Cropped")
-        self.cropped_checkbox.setChecked(True)
+        if re.search(r"(?i)^.*[a-zA-Z]{3}-\d+-.*\.jpg$", self.image_path, re.IGNORECASE):
+            self.cropped_checkbox.setChecked(False)
+        else: 
+            self.cropped_checkbox.setChecked(True)
         self.cropped_checkbox.stateChanged.connect(self.update_image)
 
         checkbox_layout.addWidget(self.checkbox)
@@ -64,10 +68,13 @@ class ImageCard(QFrame):
     def update_image(self):
         original_image = QImage(self.image_path)
 
+
         if self.is_cropped():
             dpi = 300
-            crop_mm = 3.175
+            crop_mm = 6.35
             crop_px = int((crop_mm / 25.4) * dpi)
+            # img_w_mm = 63
+            # img_h_mm = 88
 
             crop_rect = QRect(
                 crop_px,
@@ -91,6 +98,12 @@ class ImageCard(QFrame):
 
     def is_cropped(self):
         return self.cropped_checkbox.isChecked()
+    
+    # def is_from_MPC_fill(self):
+    #     if re.match(r'^.*xxx-111-.*\.jpg$', self.image_path):
+    #         return False
+    #     else: 
+    #         return True
 
     def set_dark_mode(self, enabled: bool):
         self.dark_mode = enabled
